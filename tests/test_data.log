@@ -1,0 +1,13 @@
+# Test data for space missions
+# Format: Date | Mission ID | Destination | Status | Crew Size | Duration (days) | Success Rate | Security Code
+SYSTEM: Test data v1.0
+CONFIG: utf-8
+CHECKSUM: test123
+
+2045-01-15 | TST-0001 | Mars | Completed | 3 | 500 | 95.5 | ABC-123-XYZ
+2045-02-20 | TST-0002 | Mars | In Progress | 4 | 300 | 85.0 | DEF-456-UVW
+2045-03-10 | TST-0003 | Mars | Completed | 5 | 750 | 98.5 | GHI-789-RST
+2045-04-05 | TST-0004 | Moon | Completed | 2 | 200 | 99.0 | JKL-012-OPQ
+2045-05-12 | TST-0005 | Mars | Failed | 3 | 100 | 45.0 | MNO-345-LMN
+2045-06-18 | TST-0006 | Mars | Completed | 4 | 600 | 92.0 | PQR-678-IJK
+2045-07-22 | TST-0007 | Mars | Completed | 6 | 900 | 97.0 | STU-901-FGH

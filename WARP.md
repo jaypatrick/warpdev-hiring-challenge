@@ -26,10 +26,13 @@ Important notes:
 
 ## Common Commands
 
-### Run the AWK solution
+### Basic Usage
 ```bash
 # Standard output (security code and mission length)
 awk -f src/solution.awk space_missions.log
+
+# Get help
+awk -v help=1 -f src/solution.awk
 
 # Verbose output (includes statistics, warnings, and full record)
 awk -v verbose=1 -f src/solution.awk space_missions.log
@@ -41,10 +44,39 @@ Security Code: XRT-421-ZQP
 Mission Length: 1629 days
 ```
 
-### Verbose Mode Output
-Includes processing statistics, line-by-line warnings, and detailed results:
+### Advanced Features
+
+#### Multiple Output Formats
 ```bash
-awk -v verbose=1 -f src/solution.awk space_missions.log
+# JSON output
+awk -v format=json -f src/solution.awk space_missions.log
+
+# JSON with formatting (requires jq)
+awk -v format=json -f src/solution.awk space_missions.log | jq .
+
+# CSV output
+awk -v format=csv -f src/solution.awk space_missions.log
+
+# CSV with top 10 missions
+awk -v format=csv -v top=10 -f src/solution.awk space_missions.log
+```
+
+#### Top N Missions
+```bash
+# Get top 5 longest missions
+awk -v top=5 -f src/solution.awk space_missions.log
+
+# Get all missions (up to 975 valid completed Mars missions)
+awk -v top=999 -f src/solution.awk space_missions.log
+```
+
+#### Combining Options
+```bash
+# Top 10 as JSON with verbose stats
+awk -v format=json -v top=10 -v verbose=1 -f src/solution.awk space_missions.log
+
+# Top 20 as CSV
+awk -v format=csv -v top=20 -f src/solution.awk space_missions.log > results.csv
 ```
 
 ### Explore the log file structure
@@ -68,7 +100,7 @@ awk -F'|' 'NR > 6 && $3 ~ /Mars/ { gsub(/^[ \t]+|[ \t]+$/, "", $4); print $4 }' 
 ### Validate and debug AWK scripts
 ```bash
 # Test with first 100 lines
-head -100 space_missions.log | awk -F'|' -f src/solution.awk
+head -100 space_missions.log | awk -f src/solution.awk
 
 # Extract just security codes from completed Mars missions
 awk -F'|' 'NR > 6 && $3 ~ /Mars/ && $4 ~ /Completed/ { gsub(/^[ \t]+|[ \t]+$/, "", $8); print $8 }' space_missions.log
@@ -76,6 +108,51 @@ awk -F'|' 'NR > 6 && $3 ~ /Mars/ && $4 ~ /Completed/ { gsub(/^[ \t]+|[ \t]+$/, "
 # Show all completed Mars missions with duration
 awk -F'|' 'NR > 6 && $3 ~ /Mars/ && $4 ~ /Completed/ { print $0 }' space_missions.log
 ```
+
+## Testing
+
+### Run Test Suite
+```bash
+# Run all tests
+./tests/run_tests.sh
+
+# Test with small dataset
+awk -f src/solution.awk tests/test_data.log
+
+# Expected result from test data
+# Security Code: STU-901-FGH
+# Mission Length: 900 days
+```
+
+### Manual Testing
+```bash
+# Test each output format
+awk -f src/solution.awk tests/test_data.log
+awk -v format=json -f src/solution.awk tests/test_data.log
+awk -v format=csv -f src/solution.awk tests/test_data.log
+
+# Test top N feature
+awk -v top=3 -f src/solution.awk tests/test_data.log
+
+# Test verbose mode
+awk -v verbose=1 -f src/solution.awk tests/test_data.log
+
+# Test error handling
+echo "" | awk -f src/solution.awk  # Should exit with error
+```
+
+### CI/CD
+
+GitHub Actions automatically runs tests on:
+- Every push to `main` or `develop` branches
+- Every pull request to `main`
+- Manual workflow dispatch
+
+Tests run on:
+- Ubuntu (latest) with GNU awk
+- macOS (latest) with BSD awk
+
+Workflow file: `.github/workflows/test.yml`
 
 ## Architecture Notes
 

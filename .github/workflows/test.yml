@@ -1,0 +1,51 @@
+name: AWK Solution Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run AWK Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Install AWK (gawk on Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gawk
+        
+    - name: Verify AWK installation
+      run: |
+        awk --version || awk -W version || echo "AWK is available"
+        
+    - name: Make test script executable
+      run: chmod +x tests/run_tests.sh
+      
+    - name: Run tests
+      run: ./tests/run_tests.sh
+      
+    - name: Test help output
+      run: awk -v help=1 -f src/solution.awk
+      
+    - name: Test default output
+      run: awk -f src/solution.awk space_missions.log
+      
+    - name: Test JSON output
+      run: awk -v format=json -f src/solution.awk space_missions.log | head -30
+      
+    - name: Test CSV output
+      run: awk -v format=csv -v top=3 -f src/solution.awk space_missions.log
+      
+    - name: Test verbose mode
+      run: awk -v verbose=1 -f src/solution.awk space_missions.log | head -20
