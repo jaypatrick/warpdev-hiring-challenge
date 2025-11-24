@@ -106,6 +106,24 @@ awk -f src/solution.awk space_missions.log
 ./tests/run_tests.sh
 ```
 
+## Platform-Agnostic Test Wrapper
+
+The easiest way to run tests on any platform:
+
+```bash
+# In Git Bash, WSL, or any Unix-like shell
+./test
+
+# In Windows CMD or PowerShell
+test.cmd
+```
+
+The wrapper automatically:
+- Detects your operating system
+- Checks for required tools (bash, gawk)
+- Runs the appropriate test script
+- Provides helpful error messages if tools are missing
+
 ## Manual Testing on Windows
 
 If the automated test script doesn't work, test manually:

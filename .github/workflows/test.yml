@@ -29,11 +29,13 @@ jobs:
       run: |
         awk --version || awk -W version || echo "AWK is available"
         
-    - name: Make test script executable
-      run: chmod +x tests/run_tests.sh
+    - name: Make test scripts executable
+      run: |
+        chmod +x test
+        chmod +x tests/run_tests.sh
       
-    - name: Run tests
-      run: ./tests/run_tests.sh
+    - name: Run tests (platform-agnostic wrapper)
+      run: ./test
       
     - name: Test help output
       run: awk -v help=1 -f src/solution.awk

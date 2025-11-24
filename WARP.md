@@ -113,8 +113,12 @@ awk -F'|' 'NR > 6 && $3 ~ /Mars/ && $4 ~ /Completed/ { print $0 }' space_mission
 
 ### Run Test Suite
 ```bash
-# Run all tests
-./tests/run_tests.sh
+# Platform-agnostic (recommended) - auto-detects OS
+./test
+
+# Or platform-specific:
+./tests/run_tests.sh              # Unix/Linux/macOS/WSL
+tests\run_tests.bat               # Windows CMD
 
 # Test with small dataset
 awk -f src/solution.awk tests/test_data.log

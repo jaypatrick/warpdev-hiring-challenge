@@ -68,22 +68,31 @@ awk -v format=csv -v top=10 -f src/solution.awk space_missions.log
 
 ### Running Tests
 
-**Unix/Linux/macOS:**
+**Platform-Agnostic (Recommended):**
 ```bash
-# Run all tests
-./tests/run_tests.sh
+# Works on all platforms - automatically detects OS
+./test
 
-# Test with small dataset
-awk -f src/solution.awk tests/test_data.log
+# Or on Windows CMD
+test.cmd
 ```
 
-**Windows:**
-```cmd
-REM Run all tests (requires gawk)
-tests\run_tests.bat
+**Platform-Specific:**
 
-REM Or use WSL/Git Bash
-.\tests\run_tests.sh
+*Unix/Linux/macOS/WSL/Git Bash:*
+```bash
+./tests/run_tests.sh
+```
+
+*Windows CMD/PowerShell:*
+```cmd
+tests\run_tests.bat
+```
+
+**Quick Manual Test:**
+```bash
+# Test with small dataset (works on all platforms)
+awk -f src/solution.awk tests/test_data.log
 ```
 
 ### Documentation
@@ -101,13 +110,17 @@ REM Or use WSL/Git Bash
 │   └── solution.awk          # Main AWK solution script
 ├── tests/
 │   ├── test_data.log          # Test dataset
-│   └── run_tests.sh           # Test runner
+│   ├── run_tests.sh           # Unix test runner
+│   └── run_tests.bat          # Windows test runner
 ├── .github/
 │   └── workflows/
 │       └── test.yml           # CI/CD configuration
+├── test                       # Platform-agnostic test wrapper (Unix)
+├── test.cmd                   # Platform-agnostic test wrapper (Windows)
 ├── space_missions.log         # Full mission log (~10MB)
 ├── README.md                  # This file
 ├── WARP.md                    # Developer documentation
+├── WINDOWS.md                 # Windows-specific guide
 ├── TROUBLESHOOTING.md         # Troubleshooting guide
 └── mission_challenge.md       # Challenge description
 ```

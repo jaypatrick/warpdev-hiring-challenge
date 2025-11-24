@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Platform-agnostic test runner wrapper
+# Automatically detects OS and runs appropriate test script
+# Usage: ./test
+
+set -e
+
+# Detect operating system
+detect_os() {
+    case "$(uname -s)" in
+        Linux*)     echo "Linux";;
+        Darwin*)    echo "macOS";;
+        CYGWIN*)    echo "Cygwin";;
+        MINGW*)     echo "MinGW";;
+        MSYS*)      echo "MSYS";;
+        *)          echo "Unknown";;
+    esac
+}
+
+# Detect if running in WSL
+is_wsl() {
+    if grep -qi microsoft /proc/version 2>/dev/null; then
+        return 0
+    fi
+    return 1
+}
+
+# Main execution
+main() {
+    OS=$(detect_os)
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    
+    echo "Detected OS: $OS"
+    
+    # Check for WSL
+    if is_wsl; then
+        echo "Running in WSL (Windows Subsystem for Linux)"
+        OS="WSL"
+    fi
+    
+    case "$OS" in
+        Linux|macOS|WSL|Cygwin|MSYS|MinGW)
+            echo "Running Unix-style tests..."
+            echo ""
+            if [ -x "$SCRIPT_DIR/tests/run_tests.sh" ]; then
+                exec "$SCRIPT_DIR/tests/run_tests.sh"
+            else
+                chmod +x "$SCRIPT_DIR/tests/run_tests.sh"
+                exec "$SCRIPT_DIR/tests/run_tests.sh"
+            fi
+            ;;
+        *)
+            echo "ERROR: Unable to detect platform or unsupported OS: $OS"
+            echo ""
+            echo "Manual testing options:"
+            echo "  Unix/Linux/macOS:  ./tests/run_tests.sh"
+            echo "  Windows (CMD):     tests\\run_tests.bat"
+            echo "  Windows (Git Bash): ./tests/run_tests.sh"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"
