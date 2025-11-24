@@ -38,16 +38,16 @@ jobs:
       run: ./test
       
     - name: Test help output
-      run: awk -v help=1 -f src/solution.awk
+      run: awk -v help=1 -f src/mars_mission_analyzer.awk
       
     - name: Test default output
-      run: awk -f src/solution.awk space_missions.log
+      run: awk -f src/mars_mission_analyzer.awk space_missions.log
       
     - name: Test JSON output
-      run: awk -v format=json -f src/solution.awk space_missions.log | head -30
+      run: awk -v format=json -f src/mars_mission_analyzer.awk space_missions.log | head -30
       
     - name: Test CSV output
-      run: awk -v format=csv -v top=3 -f src/solution.awk space_missions.log
+      run: awk -v format=csv -v top=3 -f src/mars_mission_analyzer.awk space_missions.log
       
     - name: Test verbose mode
-      run: awk -v verbose=1 -f src/solution.awk space_missions.log | head -20
+      run: awk -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log | head -20

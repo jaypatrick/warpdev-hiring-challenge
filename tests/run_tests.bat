@@ -14,7 +14,7 @@ echo.
 
 REM Test 1: Help output
 echo Testing: Help flag displays usage...
-gawk -v help=1 -f src\solution.awk >nul 2>&1
+gawk -v help=1 -f src\mars_mission_analyzer.awk >nul 2>&1
 if !errorlevel! equ 0 (
     echo [PASSED]
     set /a TESTS_PASSED+=1
@@ -25,7 +25,7 @@ if !errorlevel! equ 0 (
 
 REM Test 2: Default output with test data
 echo Testing: Default output format...
-gawk -f src\solution.awk tests\test_data.log | findstr "STU-901-FGH" >nul
+gawk -f src\mars_mission_analyzer.awk tests\test_data.log | findstr "STU-901-FGH" >nul
 if !errorlevel! equ 0 (
     echo [PASSED]
     set /a TESTS_PASSED+=1
@@ -36,7 +36,7 @@ if !errorlevel! equ 0 (
 
 REM Test 3: JSON output
 echo Testing: JSON output format...
-gawk -v format=json -f src\solution.awk tests\test_data.log | findstr "security_code" >nul
+gawk -v format=json -f src\mars_mission_analyzer.awk tests\test_data.log | findstr "security_code" >nul
 if !errorlevel! equ 0 (
     echo [PASSED]
     set /a TESTS_PASSED+=1
@@ -47,7 +47,7 @@ if !errorlevel! equ 0 (
 
 REM Test 4: CSV output
 echo Testing: CSV output format...
-gawk -v format=csv -f src\solution.awk tests\test_data.log | findstr "Mission ID" >nul
+gawk -v format=csv -f src\mars_mission_analyzer.awk tests\test_data.log | findstr "Mission ID" >nul
 if !errorlevel! equ 0 (
     echo [PASSED]
     set /a TESTS_PASSED+=1
@@ -58,7 +58,7 @@ if !errorlevel! equ 0 (
 
 REM Test 5: Top N missions
 echo Testing: Top 3 missions...
-gawk -v top=3 -f src\solution.awk tests\test_data.log | find /c "Rank #" >nul
+gawk -v top=3 -f src\mars_mission_analyzer.awk tests\test_data.log | find /c "Rank #" >nul
 if !errorlevel! equ 0 (
     echo [PASSED]
     set /a TESTS_PASSED+=1
@@ -70,7 +70,7 @@ if !errorlevel! equ 0 (
 REM Test 6: Full data file (if exists)
 if exist space_missions.log (
     echo Testing: Full data file - longest mission...
-    gawk -f src\solution.awk space_missions.log | findstr "XRT-421-ZQP" >nul
+    gawk -f src\mars_mission_analyzer.awk space_missions.log | findstr "XRT-421-ZQP" >nul
     if !errorlevel! equ 0 (
         echo [PASSED]
         set /a TESTS_PASSED+=1
@@ -80,7 +80,7 @@ if exist space_missions.log (
     )
     
     echo Testing: Full data file - JSON format...
-    gawk -v format=json -f src\solution.awk space_missions.log | findstr "1629" >nul
+    gawk -v format=json -f src\mars_mission_analyzer.awk space_missions.log | findstr "1629" >nul
     if !errorlevel! equ 0 (
         echo [PASSED]
         set /a TESTS_PASSED+=1
@@ -92,7 +92,7 @@ if exist space_missions.log (
 
 REM Test 7: Verbose mode
 echo Testing: Verbose mode statistics...
-gawk -v verbose=1 -f src\solution.awk tests\test_data.log 2>&1 | findstr "Processing Statistics" >nul
+gawk -v verbose=1 -f src\mars_mission_analyzer.awk tests\test_data.log 2>&1 | findstr "Processing Statistics" >nul
 if !errorlevel! equ 0 (
     echo [PASSED]
     set /a TESTS_PASSED+=1

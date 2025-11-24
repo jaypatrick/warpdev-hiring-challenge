@@ -12,7 +12,7 @@ Get started by reading the [challenge description](mission_challenge.md). Good l
 The challenge has been solved using AWK! Run the solution with:
 
 ```bash
-awk -f src/solution.awk space_missions.log
+awk -f src/mars_mission_analyzer.awk space_missions.log
 ```
 
 **Answer:**
@@ -23,22 +23,22 @@ awk -f src/solution.awk space_missions.log
 
 ```bash
 # Basic usage
-awk -f src/solution.awk space_missions.log
+awk -f src/mars_mission_analyzer.awk space_missions.log
 
 # Show help
-awk -v help=1 -f src/solution.awk
+awk -v help=1 -f src/mars_mission_analyzer.awk
 
 # Verbose output with statistics
-awk -v verbose=1 -f src/solution.awk space_missions.log
+awk -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log
 
 # Get top 5 longest missions
-awk -v top=5 -f src/solution.awk space_missions.log
+awk -v top=5 -f src/mars_mission_analyzer.awk space_missions.log
 
 # Export as JSON
-awk -v format=json -f src/solution.awk space_missions.log
+awk -v format=json -f src/mars_mission_analyzer.awk space_missions.log
 
 # Export as CSV
-awk -v format=csv -v top=10 -f src/solution.awk space_missions.log
+awk -v format=csv -v top=10 -f src/mars_mission_analyzer.awk space_missions.log
 ```
 
 ### Features
@@ -92,7 +92,7 @@ tests\run_tests.bat
 **Quick Manual Test:**
 ```bash
 # Test with small dataset (works on all platforms)
-awk -f src/solution.awk tests/test_data.log
+awk -f src/mars_mission_analyzer.awk tests/test_data.log
 ```
 
 ### Documentation
@@ -107,7 +107,7 @@ awk -f src/solution.awk tests/test_data.log
 ```
 .
 ├── src/
-│   └── solution.awk          # Main AWK solution script
+│   └── mars_mission_analyzer.awk  # AWK script to find longest Mars missions
 ├── tests/
 │   ├── test_data.log          # Test dataset
 │   ├── run_tests.sh           # Unix test runner

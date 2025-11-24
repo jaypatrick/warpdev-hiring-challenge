@@ -21,7 +21,8 @@ BEGIN {
     # Show help if requested
     showed_help = 0
     if (help) {
-        print "Usage: awk [OPTIONS] -f solution.awk <logfile>"
+        print "Mars Mission Analyzer - Find the longest successful Mars missions"
+        print "Usage: awk [OPTIONS] -f mars_mission_analyzer.awk <logfile>"
         print ""
         print "Options:"
         print "  -v verbose=1      Show detailed processing statistics and warnings"
@@ -35,10 +36,10 @@ BEGIN {
         print "  csv      CSV format for spreadsheet import"
         print ""
         print "Examples:"
-        print "  awk -f solution.awk space_missions.log"
-        print "  awk -v verbose=1 -f solution.awk space_missions.log"
-        print "  awk -v format=json -f solution.awk space_missions.log"
-        print "  awk -v format=csv -v top=5 -f solution.awk space_missions.log"
+        print "  awk -f mars_mission_analyzer.awk space_missions.log"
+        print "  awk -v verbose=1 -f mars_mission_analyzer.awk space_missions.log"
+        print "  awk -v format=json -f mars_mission_analyzer.awk space_missions.log"
+        print "  awk -v format=csv -v top=5 -f mars_mission_analyzer.awk space_missions.log"
         showed_help = 1
         exit 0
     }
