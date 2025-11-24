@@ -79,9 +79,13 @@ Install AWK natively on Windows.
 # Basic usage
 gawk -f src/mars_mission_analyzer.awk data/space_missions.log
 
+# With timing (recommended)
+analyze.bat
+
 # With options
 gawk -v format=json -f src/mars_mission_analyzer.awk data/space_missions.log
 gawk -v top=5 -f src/mars_mission_analyzer.awk data/space_missions.log
+analyze.bat -v verbose=1
 ```
 
 ### Usage in Command Prompt

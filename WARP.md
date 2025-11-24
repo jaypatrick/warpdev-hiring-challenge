@@ -32,6 +32,10 @@ Important notes:
 # Standard output (security code and mission length)
 awk -f src/mars_mission_analyzer.awk data/space_missions.log
 
+# With timing (recommended)
+./analyze              # Unix/Linux/macOS/WSL/Git Bash
+analyze.bat            # Windows CMD/PowerShell
+
 # Get help
 awk -v help=1 -f src/mars_mission_analyzer.awk
 

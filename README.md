@@ -26,7 +26,8 @@ awk -f src/mars_mission_analyzer.awk data/space_missions.log
 awk -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # With timing (convenience wrapper)
-./analyze
+./analyze              # Unix/Linux/macOS/WSL/Git Bash
+analyze.bat            # Windows CMD/PowerShell
 
 # Show help
 awk -v help=1 -f src/mars_mission_analyzer.awk
@@ -131,7 +132,8 @@ awk -f src/mars_mission_analyzer.awk tests/test_data.log
 │       └── test.yml           # CI/CD configuration
 ├── test                       # Platform-agnostic test wrapper (Unix)
 ├── test.cmd                   # Platform-agnostic test wrapper (Windows)
-├── analyze                    # Convenience script with timing
+├── analyze                    # Analysis with timing (Unix)
+├── analyze.bat                # Analysis with timing (Windows)
 ├── README.md                  # This file
 ├── WARP.md                    # Developer documentation
 ├── WINDOWS.md                 # Windows-specific guide

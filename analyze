@@ -25,11 +25,15 @@ if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
     exit 0
 fi
 
-# Find the data file (last argument if it's a file, otherwise use default)
+# Find the data file and separate AWK options
 DATAFILE="$DEFAULT_DATA"
+AWK_OPTS=()
+
 for arg in "$@"; do
     if [[ -f "$arg" ]]; then
         DATAFILE="$arg"
+    else
+        AWK_OPTS+=("$arg")
     fi
 done
 
@@ -42,4 +46,13 @@ fi
 # Run with timing
 echo "Analyzing: $DATAFILE"
 echo "================================"
-time awk "$@" -f "$AWK_SCRIPT" "$DATAFILE"
+echo ""
+
+# Use time command if available, otherwise just run
+if command -v time >/dev/null 2>&1; then
+    time awk "${AWK_OPTS[@]}" -f "$AWK_SCRIPT" "$DATAFILE"
+else
+    awk "${AWK_OPTS[@]}" -f "$AWK_SCRIPT" "$DATAFILE"
+    echo ""
+    echo "Note: Install 'time' command for execution timing"
+fi
