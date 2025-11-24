@@ -68,9 +68,9 @@ if !errorlevel! equ 0 (
 )
 
 REM Test 6: Full data file (if exists)
-if exist space_missions.log (
+if exist data\space_missions.log (
     echo Testing: Full data file - longest mission...
-    gawk -f src\mars_mission_analyzer.awk space_missions.log | findstr "XRT-421-ZQP" >nul
+    gawk -f src\mars_mission_analyzer.awk data\space_missions.log | findstr "XRT-421-ZQP" >nul
     if !errorlevel! equ 0 (
         echo [PASSED]
         set /a TESTS_PASSED+=1
@@ -80,7 +80,7 @@ if exist space_missions.log (
     )
     
     echo Testing: Full data file - JSON format...
-    gawk -v format=json -f src\mars_mission_analyzer.awk space_missions.log | findstr "1629" >nul
+    gawk -v format=json -f src\mars_mission_analyzer.awk data\space_missions.log | findstr "1629" >nul
     if !errorlevel! equ 0 (
         echo [PASSED]
         set /a TESTS_PASSED+=1

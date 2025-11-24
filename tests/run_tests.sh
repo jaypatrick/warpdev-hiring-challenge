@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 AWK_SCRIPT="$PROJECT_ROOT/src/mars_mission_analyzer.awk"
 TEST_DATA="$SCRIPT_DIR/test_data.log"
-FULL_DATA="$PROJECT_ROOT/space_missions.log"
+FULL_DATA="$PROJECT_ROOT/data/space_missions.log"
 
 # Colors for output
 GREEN='\033[0;32m'

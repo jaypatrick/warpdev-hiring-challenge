@@ -12,7 +12,7 @@ Get started by reading the [challenge description](mission_challenge.md). Good l
 The challenge has been solved using AWK! Run the solution with:
 
 ```bash
-awk -f src/mars_mission_analyzer.awk space_missions.log
+awk -f src/mars_mission_analyzer.awk data/space_missions.log
 ```
 
 **Answer:**
@@ -23,22 +23,22 @@ awk -f src/mars_mission_analyzer.awk space_missions.log
 
 ```bash
 # Basic usage
-awk -f src/mars_mission_analyzer.awk space_missions.log
+awk -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # Show help
 awk -v help=1 -f src/mars_mission_analyzer.awk
 
 # Verbose output with statistics
-awk -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log
+awk -v verbose=1 -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # Get top 5 longest missions
-awk -v top=5 -f src/mars_mission_analyzer.awk space_missions.log
+awk -v top=5 -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # Export as JSON
-awk -v format=json -f src/mars_mission_analyzer.awk space_missions.log
+awk -v format=json -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # Export as CSV
-awk -v format=csv -v top=10 -f src/mars_mission_analyzer.awk space_missions.log
+awk -v format=csv -v top=10 -f src/mars_mission_analyzer.awk data/space_missions.log
 ```
 
 ### Features
@@ -108,6 +108,8 @@ awk -f src/mars_mission_analyzer.awk tests/test_data.log
 .
 ├── src/
 │   └── mars_mission_analyzer.awk  # AWK script to find longest Mars missions
+├── data/
+│   └── space_missions.log     # Full mission log (~10MB)
 ├── tests/
 │   ├── test_data.log          # Test dataset
 │   ├── run_tests.sh           # Unix test runner
@@ -117,7 +119,6 @@ awk -f src/mars_mission_analyzer.awk tests/test_data.log
 │       └── test.yml           # CI/CD configuration
 ├── test                       # Platform-agnostic test wrapper (Unix)
 ├── test.cmd                   # Platform-agnostic test wrapper (Windows)
-├── space_missions.log         # Full mission log (~10MB)
 ├── README.md                  # This file
 ├── WARP.md                    # Developer documentation
 ├── WINDOWS.md                 # Windows-specific guide

@@ -3,13 +3,14 @@
 This file provides guidance to WARP (warp.dev) when working with code in this repository.
 
 ## Repository Overview
-This is a Warp hiring challenge repository focused on log file analysis using AWK. The challenge involves parsing `space_missions.log` to find the longest successful Mars mission and extract its security code.
+This is a Warp hiring challenge repository focused on log file analysis using AWK. The challenge involves parsing `data/space_missions.log` to find the longest successful Mars mission and extract its security code.
 
 ## Key Files
-- `space_missions.log` - Large (~10MB) pipe-delimited log file containing space mission data from 2030-2070
-- `mission_challenge.md` - Complete challenge description and requirements
+- `data/space_missions.log` - Full mission log (~10MB, pipe-delimited, 2030-2070)
 - `src/mars_mission_analyzer.awk` - AWK script solution
-- `README.md` - Brief overview and getting started instructions
+- `tests/test_data.log` - Small test dataset
+- `mission_challenge.md` - Original challenge description
+- `README.md` - Documentation and getting started
 
 ## Data Format
 The log file contains pipe-delimited fields with inconsistent spacing:
@@ -29,13 +30,13 @@ Important notes:
 ### Basic Usage
 ```bash
 # Standard output (security code and mission length)
-awk -f src/mars_mission_analyzer.awk space_missions.log
+awk -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # Get help
 awk -v help=1 -f src/mars_mission_analyzer.awk
 
 # Verbose output (includes statistics, warnings, and full record)
-awk -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log
+awk -v verbose=1 -f src/mars_mission_analyzer.awk data/space_missions.log
 ```
 
 ### Expected Output
@@ -49,64 +50,64 @@ Mission Length: 1629 days
 #### Multiple Output Formats
 ```bash
 # JSON output
-awk -v format=json -f src/mars_mission_analyzer.awk space_missions.log
+awk -v format=json -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # JSON with formatting (requires jq)
-awk -v format=json -f src/mars_mission_analyzer.awk space_missions.log | jq .
+awk -v format=json -f src/mars_mission_analyzer.awk data/space_missions.log | jq .
 
 # CSV output
-awk -v format=csv -f src/mars_mission_analyzer.awk space_missions.log
+awk -v format=csv -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # CSV with top 10 missions
-awk -v format=csv -v top=10 -f src/mars_mission_analyzer.awk space_missions.log
+awk -v format=csv -v top=10 -f src/mars_mission_analyzer.awk data/space_missions.log
 ```
 
 #### Top N Missions
 ```bash
 # Get top 5 longest missions
-awk -v top=5 -f src/mars_mission_analyzer.awk space_missions.log
+awk -v top=5 -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # Get all missions (up to 975 valid completed Mars missions)
-awk -v top=999 -f src/mars_mission_analyzer.awk space_missions.log
+awk -v top=999 -f src/mars_mission_analyzer.awk data/space_missions.log
 ```
 
 #### Combining Options
 ```bash
 # Top 10 as JSON with verbose stats
-awk -v format=json -v top=10 -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log
+awk -v format=json -v top=10 -v verbose=1 -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # Top 20 as CSV
-awk -v format=csv -v top=20 -f src/mars_mission_analyzer.awk space_missions.log > results.csv
+awk -v format=csv -v top=20 -f src/mars_mission_analyzer.awk data/space_missions.log > results.csv
 ```
 
 ### Explore the log file structure
 ```bash
 # View header and format information
-head -10 space_missions.log
+head -10 data/space_missions.log
 
 # Count total missions
-wc -l space_missions.log
+wc -l data/space_missions.log
 
 # View unique destinations
-awk -F'|' 'NR > 6 { gsub(/^[ \t]+|[ \t]+$/, "", $3); print $3 }' space_missions.log | sort -u
+awk -F'|' 'NR > 6 { gsub(/^[ \t]+|[ \t]+$/, "", $3); print $3 }' data/space_missions.log | sort -u
 
 # View unique statuses
-awk -F'|' 'NR > 6 { gsub(/^[ \t]+|[ \t]+$/, "", $4); print $4 }' space_missions.log | sort -u
+awk -F'|' 'NR > 6 { gsub(/^[ \t]+|[ \t]+$/, "", $4); print $4 }' data/space_missions.log | sort -u
 
 # Count Mars missions by status
-awk -F'|' 'NR > 6 && $3 ~ /Mars/ { gsub(/^[ \t]+|[ \t]+$/, "", $4); print $4 }' space_missions.log | sort | uniq -c
+awk -F'|' 'NR > 6 && $3 ~ /Mars/ { gsub(/^[ \t]+|[ \t]+$/, "", $4); print $4 }' data/space_missions.log | sort | uniq -c
 ```
 
 ### Validate and debug AWK scripts
 ```bash
 # Test with first 100 lines
-head -100 space_missions.log | awk -f src/mars_mission_analyzer.awk
+head -100 data/space_missions.log | awk -f src/mars_mission_analyzer.awk
 
 # Extract just security codes from completed Mars missions
-awk -F'|' 'NR > 6 && $3 ~ /Mars/ && $4 ~ /Completed/ { gsub(/^[ \t]+|[ \t]+$/, "", $8); print $8 }' space_missions.log
+awk -F'|' 'NR > 6 && $3 ~ /Mars/ && $4 ~ /Completed/ { gsub(/^[ \t]+|[ \t]+$/, "", $8); print $8 }' data/space_missions.log
 
 # Show all completed Mars missions with duration
-awk -F'|' 'NR > 6 && $3 ~ /Mars/ && $4 ~ /Completed/ { print $0 }' space_missions.log
+awk -F'|' 'NR > 6 && $3 ~ /Mars/ && $4 ~ /Completed/ { print $0 }' data/space_missions.log
 ```
 
 ## Testing

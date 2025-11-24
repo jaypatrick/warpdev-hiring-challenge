@@ -22,7 +22,7 @@ sudo apt-get install gawk
 ### Usage
 Once in WSL, use all commands exactly as documented:
 ```bash
-awk -f src/mars_mission_analyzer.awk space_missions.log
+awk -f src/mars_mission_analyzer.awk data/space_missions.log
 ./tests/run_tests.sh
 ```
 
@@ -37,16 +37,16 @@ Git Bash comes with AWK and works well for running the solution.
 ### Usage
 ```bash
 # Basic usage works the same
-awk -f src/mars_mission_analyzer.awk space_missions.log
+awk -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # Test with small dataset
 awk -f src/mars_mission_analyzer.awk tests/test_data.log
 
 # JSON output
-awk -v format=json -f src/mars_mission_analyzer.awk space_missions.log
+awk -v format=json -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # Top 5 missions
-awk -v top=5 -f src/mars_mission_analyzer.awk space_missions.log
+awk -v top=5 -f src/mars_mission_analyzer.awk data/space_missions.log
 ```
 
 ### Limitations
@@ -77,17 +77,17 @@ Install AWK natively on Windows.
 ### Usage in PowerShell
 ```powershell
 # Basic usage
-gawk -f src/mars_mission_analyzer.awk space_missions.log
+gawk -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # With options
-gawk -v format=json -f src/mars_mission_analyzer.awk space_missions.log
-gawk -v top=5 -f src/mars_mission_analyzer.awk space_missions.log
+gawk -v format=json -f src/mars_mission_analyzer.awk data/space_missions.log
+gawk -v top=5 -f src/mars_mission_analyzer.awk data/space_missions.log
 ```
 
 ### Usage in Command Prompt
 ```cmd
-gawk -f src\mars_mission_analyzer.awk space_missions.log
-gawk -v format=json -f src\mars_mission_analyzer.awk space_missions.log
+gawk -f src\mars_mission_analyzer.awk data/space_missions.log
+gawk -v format=json -f src\mars_mission_analyzer.awk data/space_missions.log
 ```
 
 ## Option 4: Cygwin
@@ -102,7 +102,7 @@ Cygwin provides a Unix-like environment on Windows.
 ### Usage
 Works exactly like Linux:
 ```bash
-awk -f src/mars_mission_analyzer.awk space_missions.log
+awk -f src/mars_mission_analyzer.awk data/space_missions.log
 ./tests/run_tests.sh
 ```
 
@@ -148,7 +148,7 @@ gawk -v format=csv -f src/mars_mission_analyzer.awk tests/test_data.log
 gawk -v top=3 -f src/mars_mission_analyzer.awk tests/test_data.log
 
 # Test with full data
-gawk -f src/mars_mission_analyzer.awk space_missions.log
+gawk -f src/mars_mission_analyzer.awk data/space_missions.log
 # Should output: XRT-421-ZQP and 1629 days
 ```
 
@@ -172,7 +172,7 @@ gawk -v top=3 -f src\mars_mission_analyzer.awk tests\test_data.log
 echo.
 
 echo Test 4: Full dataset
-gawk -f src\mars_mission_analyzer.awk space_missions.log
+gawk -f src\mars_mission_analyzer.awk data/space_missions.log
 echo.
 
 echo Tests complete!
@@ -206,12 +206,12 @@ dos2unix src/mars_mission_analyzer.awk tests/run_tests.sh
 ### Issue: Path separators
 **Windows uses backslashes**: In PowerShell/CMD, use `\` instead of `/`:
 ```cmd
-gawk -f src\mars_mission_analyzer.awk space_missions.log
+gawk -f src\mars_mission_analyzer.awk data/space_missions.log
 ```
 
 **Git Bash uses forward slashes**: In Git Bash, use `/`:
 ```bash
-awk -f src/mars_mission_analyzer.awk space_missions.log
+awk -f src/mars_mission_analyzer.awk data/space_missions.log
 ```
 
 ### Issue: Test script won't run
@@ -226,7 +226,7 @@ For the best experience:
 
 ## File Compatibility
 
-The AWK script (`src/mars_mission_analyzer.awk`) is fully compatible with Windows. The data file (`space_missions.log`) will work on any platform. Only the bash test script needs adaptation for Windows.
+The AWK script (`src/mars_mission_analyzer.awk`) is fully compatible with Windows. The data file (`data/space_missions.log`) will work on any platform. Only the bash test script needs adaptation for Windows.
 
 ## Performance Notes
 

@@ -11,7 +11,7 @@ This guide helps you resolve common issues when running the AWK solution for the
 **Solution:**
 - Make sure you're running the command from the project root directory
 - Verify the file exists: `ls -la src/mars_mission_analyzer.awk`
-- Use the correct path: `awk -f src/mars_mission_analyzer.awk space_missions.log`
+- Use the correct path: `awk -f src/mars_mission_analyzer.awk data/space_missions.log`
 
 ### 2. "Permission denied" Error
 
@@ -30,7 +30,7 @@ chmod +x tests/run_tests.sh
 **Possible Causes:**
 1. **No input file specified**: Make sure to provide the log file
    ```bash
-   awk -f src/mars_mission_analyzer.awk space_missions.log
+   awk -f src/mars_mission_analyzer.awk data/space_missions.log
    ```
 
 2. **Reading from stdin**: If you don't specify a file, AWK waits for input from stdin
@@ -39,7 +39,7 @@ chmod +x tests/run_tests.sh
 
 3. **Very large file**: The full dataset takes time to process (~10MB file with 100k+ lines)
    - Be patient, it should complete in a few seconds
-   - Use verbose mode to see progress: `awk -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log`
+   - Use verbose mode to see progress: `awk -v verbose=1 -f src/mars_mission_analyzer.awk data/space_missions.log`
 
 ### 4. "ERROR: No valid completed Mars missions found"
 
@@ -48,7 +48,7 @@ chmod +x tests/run_tests.sh
 **Possible Causes:**
 1. **Wrong file**: Make sure you're using the correct log file
    ```bash
-   ls -lh space_missions.log  # Should be ~10MB
+   ls -lh data/space_missions.log  # Should be ~10MB
    ```
 
 2. **Corrupted file**: The log file might be incomplete or corrupted
@@ -78,7 +78,7 @@ awk --version  # GNU awk (gawk)
 awk -W version # Some BSD awk versions
 
 # Try with gawk explicitly (if installed)
-gawk -f src/mars_mission_analyzer.awk space_missions.log
+gawk -f src/mars_mission_analyzer.awk data/space_missions.log
 ```
 
 ### 6. JSON Output is Invalid
@@ -89,12 +89,12 @@ gawk -f src/mars_mission_analyzer.awk space_missions.log
 The JSON output is valid JSON. Common issues:
 1. **Stderr mixed with stdout**: Redirect stderr to separate output
    ```bash
-   awk -v format=json -f src/mars_mission_analyzer.awk space_missions.log 2>/dev/null
+   awk -v format=json -f src/mars_mission_analyzer.awk data/space_missions.log 2>/dev/null
    ```
 
 2. **Partial output**: Make sure the command completes successfully
    ```bash
-   awk -v format=json -f src/mars_mission_analyzer.awk space_missions.log > output.json
+   awk -v format=json -f src/mars_mission_analyzer.awk data/space_missions.log > output.json
    echo $?  # Should be 0 (success)
    ```
 
@@ -139,7 +139,7 @@ Mission Length: 1629 days
 **Verification:**
 ```bash
 # Verify with verbose mode
-awk -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log
+awk -v verbose=1 -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # Should show:
 # - Found at line: 5448
@@ -152,7 +152,7 @@ awk -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log
 2. Verify file hasn't been modified
 3. Check for sorting issues with top-N feature:
    ```bash
-   awk -v top=5 -f src/mars_mission_analyzer.awk space_missions.log
+   awk -v top=5 -f src/mars_mission_analyzer.awk data/space_missions.log
    ```
 
 ### 9. Performance Issues
@@ -162,13 +162,13 @@ awk -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log
 **Optimization Tips:**
 1. **Disable verbose mode** for production use:
    ```bash
-   awk -f src/mars_mission_analyzer.awk space_missions.log  # Fast
-   awk -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log  # Slower
+   awk -f src/mars_mission_analyzer.awk data/space_missions.log  # Fast
+   awk -v verbose=1 -f src/mars_mission_analyzer.awk data/space_missions.log  # Slower
    ```
 
 2. **Limit top-N results**:
    ```bash
-   awk -v top=10 -f src/mars_mission_analyzer.awk space_missions.log
+   awk -v top=10 -f src/mars_mission_analyzer.awk data/space_missions.log
    ```
 
 3. **Use appropriate AWK**: gawk is generally faster than BSD awk for large files
@@ -180,17 +180,17 @@ awk -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log
 **Solution:**
 The log file uses UTF-8 encoding:
 ```bash
-file -I space_missions.log  # Should show charset=utf-8
+file -I data/space_missions.log  # Should show charset=utf-8
 
 # If needed, convert:
-iconv -f ISO-8859-1 -t UTF-8 space_missions.log > space_missions_utf8.log
+iconv -f ISO-8859-1 -t UTF-8 data/space_missions.log > space_missions_utf8.log
 ```
 
 ## Getting More Help
 
 ### Enable Verbose Mode
 ```bash
-awk -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log 2>&1 | less
+awk -v verbose=1 -f src/mars_mission_analyzer.awk data/space_missions.log 2>&1 | less
 ```
 
 This shows:
@@ -202,7 +202,7 @@ This shows:
 
 ### View Full Record
 ```bash
-awk -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log | grep "Full Record"
+awk -v verbose=1 -f src/mars_mission_analyzer.awk data/space_missions.log | grep "Full Record"
 ```
 
 ### Check Specific Features
@@ -211,13 +211,13 @@ awk -v verbose=1 -f src/mars_mission_analyzer.awk space_missions.log | grep "Ful
 awk -v help=1 -f src/mars_mission_analyzer.awk
 
 # Top 5 missions  
-awk -v top=5 -f src/mars_mission_analyzer.awk space_missions.log
+awk -v top=5 -f src/mars_mission_analyzer.awk data/space_missions.log
 
 # JSON output
-awk -v format=json -f src/mars_mission_analyzer.awk space_missions.log | jq .
+awk -v format=json -f src/mars_mission_analyzer.awk data/space_missions.log | jq .
 
 # CSV output
-awk -v format=csv -v top=10 -f src/mars_mission_analyzer.awk space_missions.log | column -t -s,
+awk -v format=csv -v top=10 -f src/mars_mission_analyzer.awk data/space_missions.log | column -t -s,
 ```
 
 ## Still Having Issues?

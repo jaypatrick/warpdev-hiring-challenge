@@ -36,10 +36,10 @@ BEGIN {
         print "  csv      CSV format for spreadsheet import"
         print ""
         print "Examples:"
-        print "  awk -f mars_mission_analyzer.awk space_missions.log"
-        print "  awk -v verbose=1 -f mars_mission_analyzer.awk space_missions.log"
-        print "  awk -v format=json -f mars_mission_analyzer.awk space_missions.log"
-        print "  awk -v format=csv -v top=5 -f mars_mission_analyzer.awk space_missions.log"
+        print "  awk -f mars_mission_analyzer.awk data/space_missions.log"
+        print "  awk -v verbose=1 -f mars_mission_analyzer.awk data/space_missions.log"
+        print "  awk -v format=json -f mars_mission_analyzer.awk data/space_missions.log"
+        print "  awk -v format=csv -v top=5 -f mars_mission_analyzer.awk data/space_missions.log"
         showed_help = 1
         exit 0
     }

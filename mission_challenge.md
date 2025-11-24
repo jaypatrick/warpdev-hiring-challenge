@@ -4,7 +4,7 @@
 You are a data analyst at the Interplanetary Space Agency. Your task is to analyze a complex log file containing data about thousands of space missions conducted between 2030 and 2070. We want to find the security code of the **longest successful Mars mission** in the database.
 
 ## Instructions
-1. You are provided with a file called `space_missions.log`
+1. You are provided with a file called `data/space_missions.log`
 2. The file contains information about space missions with fields separated by '|' characters
 3. Fields: Date | Mission ID | Destination | Status | Crew Size | Duration (days) | Success Rate | Security Code
 4. Use awk to analyze this file and find the mission that meets the criteria
