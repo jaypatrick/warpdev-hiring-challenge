@@ -230,6 +230,15 @@ awk -v format=csv -v top=10 -f src/solution.awk space_missions.log | column -t -
 ## System Requirements
 
 - AWK (any standard implementation: gawk, BSD awk, mawk)
-- Bash (for running tests)
+- Bash (for running tests on Unix/Linux/macOS)
 - ~10MB disk space for the log file
 - Unix-like environment (Linux, macOS, WSL on Windows)
+
+## Windows Users
+
+For Windows-specific instructions, see [WINDOWS.md](WINDOWS.md) which covers:
+- WSL installation and setup
+- Git Bash usage
+- Native Windows with gawk
+- Batch script for testing
+- Common Windows-specific issues

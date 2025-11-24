@@ -68,6 +68,7 @@ awk -v format=csv -v top=10 -f src/solution.awk space_missions.log
 
 ### Running Tests
 
+**Unix/Linux/macOS:**
 ```bash
 # Run all tests
 ./tests/run_tests.sh
@@ -76,10 +77,20 @@ awk -v format=csv -v top=10 -f src/solution.awk space_missions.log
 awk -f src/solution.awk tests/test_data.log
 ```
 
+**Windows:**
+```cmd
+REM Run all tests (requires gawk)
+tests\run_tests.bat
+
+REM Or use WSL/Git Bash
+.\tests\run_tests.sh
+```
+
 ### Documentation
 
 - [WARP.md](WARP.md) - Architecture notes and common commands
 - [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Common issues and solutions
+- [WINDOWS.md](WINDOWS.md) - Windows-specific installation and usage guide
 - [mission_challenge.md](mission_challenge.md) - Original challenge description
 
 ### Project Structure
