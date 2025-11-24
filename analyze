@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Convenience wrapper to run mars_mission_analyzer.awk with timing
+# Usage: ./analyze [options] [datafile]
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+AWK_SCRIPT="$SCRIPT_DIR/src/mars_mission_analyzer.awk"
+DEFAULT_DATA="$SCRIPT_DIR/data/space_missions.log"
+
+# Check if help is requested
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    echo "Mars Mission Analyzer - Convenience wrapper with timing"
+    echo "Usage: ./analyze [AWK_OPTIONS] [datafile]"
+    echo ""
+    echo "Examples:"
+    echo "  ./analyze                          # Analyze with timing"
+    echo "  ./analyze -v verbose=1             # Verbose output with timing"
+    echo "  ./analyze -v format=json           # JSON output with timing"
+    echo "  ./analyze -v top=5                 # Top 5 missions with timing"
+    echo "  ./analyze tests/test_data.log      # Analyze test data"
+    echo ""
+    echo "For more AWK options, run:"
+    echo "  awk -v help=1 -f src/mars_mission_analyzer.awk"
+    exit 0
+fi
+
+# Find the data file (last argument if it's a file, otherwise use default)
+DATAFILE="$DEFAULT_DATA"
+for arg in "$@"; do
+    if [[ -f "$arg" ]]; then
+        DATAFILE="$arg"
+    fi
+done
+
+# Check if data file exists
+if [[ ! -f "$DATAFILE" ]]; then
+    echo "Error: Data file not found: $DATAFILE"
+    exit 1
+fi
+
+# Run with timing
+echo "Analyzing: $DATAFILE"
+echo "================================"
+time awk "$@" -f "$AWK_SCRIPT" "$DATAFILE"

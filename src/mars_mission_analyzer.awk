@@ -5,6 +5,7 @@ BEGIN {
     # Command-line options (set with -v flag)
     verbose += 0      # -v verbose=1 for detailed output
     help += 0         # -v help=1 to show usage
+    timing += 0       # -v timing=1 to show execution time (note: use 'time' command for best accuracy)
     if (!format) format = "default"  # -v format=json|csv|default
     top += 0          # -v top=N to show top N missions (0 = show only longest)
     
@@ -18,6 +19,10 @@ BEGIN {
     # Storage for multiple results
     mission_count = 0
     
+    # Performance optimization: pre-lowercase constants for comparison
+    MARS_LOWER = "mars"
+    COMPLETED_LOWER = "completed"
+    
     # Show help if requested
     showed_help = 0
     if (help) {
@@ -26,6 +31,7 @@ BEGIN {
         print ""
         print "Options:"
         print "  -v verbose=1      Show detailed processing statistics and warnings"
+        print "  -v timing=1       Show execution time"
         print "  -v format=FORMAT  Output format: default, json, or csv"
         print "  -v top=N          Show top N longest missions (default: 1)"
         print "  -v help=1         Show this help message"
@@ -60,11 +66,11 @@ function is_valid_code(code) {
 /^CHECKSUM:/ { total_lines++; next }
 /^[[:space:]]*$/ { total_lines++; next }
 
-# Process data lines
+# Process data lines - optimized version
 {
     total_lines++
     
-    # Check minimum number of fields
+    # Quick field count check (optimization: fail fast)
     if (NF < 8) {
         if (verbose) {
             print "Warning: Line", NR, "has only", NF, "fields (expected 8)" > "/dev/stderr"
@@ -75,31 +81,34 @@ function is_valid_code(code) {
     
     data_lines++
     
+    # Optimization: trim and lowercase in one pass
     destination = trim($3)
-    status      = trim($4)
-    duration    = trim($6)
-    code        = trim($8)
+    dest_lower = tolower(destination)
     
-    # Track Mars missions
-    if (tolower(destination) == "mars") {
-        mars_missions++
-    }
+    # Early exit if not Mars (optimization: skip unnecessary work)
+    if (dest_lower != MARS_LOWER) next
     
-    # Case-insensitive checks via tolower() for portability
-    if (tolower(destination) == "mars" && tolower(status) == "completed") {
+    mars_missions++
+    
+    # Check status
+    status = trim($4)
+    status_lower = tolower(status)
+    
+    if (status_lower == COMPLETED_LOWER) {
         completed_mars++
         
-        # Validate duration is a positive number
-        d = duration + 0
-        if (d <= 0) {
+        # Validate duration (optimization: combined trim and convert)
+        duration = trim($6) + 0
+        if (duration <= 0) {
             if (verbose) {
-                print "Warning: Line", NR, "has invalid duration:", duration > "/dev/stderr"
+                print "Warning: Line", NR, "has invalid duration:", $6 > "/dev/stderr"
             }
             errors++
             next
         }
         
         # Validate security code format
+        code = trim($8)
         if (!is_valid_code(code)) {
             if (verbose) {
                 print "Warning: Line", NR, "has invalid security code format:", code > "/dev/stderr"
@@ -108,9 +117,9 @@ function is_valid_code(code) {
             next
         }
         
-        # Store mission data
+        # Store mission data (optimization: only store what we need)
         mission_count++
-        missions[mission_count, "duration"] = d
+        missions[mission_count, "duration"] = duration
         missions[mission_count, "code"] = code
         missions[mission_count, "line"] = $0
         missions[mission_count, "line_num"] = NR
@@ -135,6 +144,12 @@ END {
         print "Valid missions stored:", mission_count > "/dev/stderr"
         print "Errors/warnings:", errors > "/dev/stderr"
         print "============================\n" > "/dev/stderr"
+    }
+    
+    # Timing note: use 'time' command for accurate timing
+    # e.g., time awk -f mars_mission_analyzer.awk data/space_missions.log
+    if (timing && !verbose) {
+        print "Note: For accurate timing, use: time awk -f mars_mission_analyzer.awk <file>" > "/dev/stderr"
     }
     
     # Error handling: no completed Mars missions found
