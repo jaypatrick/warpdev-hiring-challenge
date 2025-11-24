@@ -118,6 +118,9 @@ END {
         print "Found at line:", best_line_num > "/dev/stderr"
         print "Duration (days):", max_duration
         print "Security Code:", best_code
+        # Trim all extra spaces from the full record for cleaner output
+        gsub(/[ \t]+/, " ", best_line)
+        gsub(/^[ \t]+|[ \t]+$/, "", best_line)
         print "Full Record:", best_line
     } else {
         # Output the security code and mission length
