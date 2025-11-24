@@ -28,12 +28,23 @@ Important notes:
 
 ### Run the AWK solution
 ```bash
-awk -F'|' -f src/solution.awk space_missions.log
+# Standard output (security code and mission length)
+awk -f src/solution.awk space_missions.log
+
+# Verbose output (includes statistics, warnings, and full record)
+awk -v verbose=1 -f src/solution.awk space_missions.log
 ```
 
-### Run inline AWK (from solution.awk)
+### Expected Output
+```
+Security Code: XRT-421-ZQP
+Mission Length: 1629 days
+```
+
+### Verbose Mode Output
+Includes processing statistics, line-by-line warnings, and detailed results:
 ```bash
-awk -F'|' 'BEGIN { IGNORECASE = 1; dest = "mars"; stat = "completed"; max = -inf } function trim(s) { gsub(/^[ \t]+|[ \t]+$/, "", s); return s } { destination = trim($3); status = trim($4); duration = trim($6); if (destination ~ dest && status ~ stat) { val = $6 + 0; if (val > max) { max = val; max_line = $0 } } } END { if (max == -inf) { print "No matches found." } else { print "Max value:", max; print "Row:", max_line } }' space_missions.log
+awk -v verbose=1 -f src/solution.awk space_missions.log
 ```
 
 ### Explore the log file structure
@@ -70,18 +81,41 @@ awk -F'|' 'NR > 6 && $3 ~ /Mars/ && $4 ~ /Completed/ { print $0 }' space_mission
 
 ### AWK Solution Approach
 The solution in `src/solution.awk` uses:
-- Field separator `-F'|'` to split pipe-delimited data
-- `IGNORECASE = 1` for case-insensitive matching
+- Field separator `FS = "|"` to split pipe-delimited data
+- `tolower()` function for portable case-insensitive matching (works on macOS/BSD awk)
 - `trim()` function to handle inconsistent whitespace
-- Pattern matching with `~` operator for destination and status
+- Pattern matching to filter Mars missions with "Completed" status
 - Tracking maximum duration value and corresponding line
-- Type coercion (`$6 + 0`) to convert string to number
+- Type coercion (`duration + 0`) to convert string to number
+- Security code format validation (ABC-123-XYZ pattern)
+
+### Error Handling Features
+1. **Input Validation**:
+   - Verifies minimum 8 fields per data line
+   - Validates duration is a positive number
+   - Validates security code format using regex pattern
+
+2. **Statistics Tracking**:
+   - Counts total lines, data lines, Mars missions, and completed missions
+   - Tracks errors/warnings during processing
+   - Reports line number where result was found
+
+3. **Error Reporting**:
+   - Specific error messages for different failure scenarios
+   - Line-by-line warnings in verbose mode
+   - All errors written to stderr, results to stdout
+
+4. **Exit Codes**:
+   - `0` = Success (answer found)
+   - `1` = Failure (no valid Mars missions found)
 
 ### Key Challenges
 1. **Whitespace handling**: Fields have variable leading/trailing spaces requiring the trim function
 2. **Header lines**: First 6 lines contain metadata and must be skipped (handled by pattern matching)
 3. **Type conversion**: Duration field is string by default, needs numeric conversion for comparison
-4. **Case sensitivity**: Destinations/statuses may vary in case, requiring IGNORECASE flag
+4. **Case sensitivity**: Destinations/statuses may vary in case, using `tolower()` for portability
+5. **Data validation**: Some lines have invalid formats, requiring field count and format validation
+6. **Portability**: macOS awk doesn't support `IGNORECASE`, use `tolower()` instead
 
 ## Challenge Requirements
 From `mission_challenge.md`:
