@@ -112,6 +112,7 @@ impl Mission {
         re.is_match(&self.security_code)
     }
 
+    #[allow(dead_code)]
     fn is_completed_mars_mission(&self) -> bool {
         self.destination.eq_ignore_ascii_case("mars")
             && self.status.eq_ignore_ascii_case("completed")
@@ -350,5 +351,258 @@ fn main() {
         OutputFormat::Default => print_default_output(&missions, args.verbose, &stats),
         OutputFormat::Json => print_json_output(&missions, &stats),
         OutputFormat::Csv => print_csv_output(&missions),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_mission_from_line_valid() {
+        let line = "2045-07-12 | KLM-1234 | Mars | Completed | 5 | 387 | 98.7 | TRX-842-YHG";
+        let mission = Mission::from_line(line, 1).unwrap();
+
+        assert_eq!(mission.date, "2045-07-12");
+        assert_eq!(mission.mission_id, "KLM-1234");
+        assert_eq!(mission.destination, "Mars");
+        assert_eq!(mission.status, "Completed");
+        assert_eq!(mission.crew_size, 5);
+        assert_eq!(mission.duration, 387);
+        assert_eq!(mission.success_rate, 98.7);
+        assert_eq!(mission.security_code, "TRX-842-YHG");
+        assert_eq!(mission.line_number, 1);
+    }
+
+    #[test]
+    fn test_mission_from_line_with_whitespace() {
+        let line = "  2045-07-12  |  KLM-1234  |  Mars  |  Completed  |  5  |  387  |  98.7  |  TRX-842-YHG  ";
+        let mission = Mission::from_line(line, 5).unwrap();
+
+        assert_eq!(mission.date, "2045-07-12");
+        assert_eq!(mission.mission_id, "KLM-1234");
+        assert_eq!(mission.security_code, "TRX-842-YHG");
+    }
+
+    #[test]
+    fn test_mission_from_line_insufficient_fields() {
+        let line = "2045-07-12 | KLM-1234 | Mars";
+        let mission = Mission::from_line(line, 1);
+
+        assert!(mission.is_none());
+    }
+
+    #[test]
+    fn test_mission_from_line_invalid_numbers() {
+        let line = "2045-07-12 | KLM-1234 | Mars | Completed | abc | 387 | 98.7 | TRX-842-YHG";
+        let mission = Mission::from_line(line, 1);
+
+        assert!(mission.is_none());
+    }
+
+    #[test]
+    fn test_is_valid_security_code_valid() {
+        let mission = Mission {
+            date: "2045-07-12".to_string(),
+            mission_id: "KLM-1234".to_string(),
+            destination: "Mars".to_string(),
+            status: "Completed".to_string(),
+            crew_size: 5,
+            duration: 387,
+            success_rate: 98.7,
+            security_code: "TRX-842-YHG".to_string(),
+            line_number: 1,
+        };
+
+        assert!(mission.is_valid_security_code());
+    }
+
+    #[test]
+    fn test_is_valid_security_code_invalid_formats() {
+        let test_cases = vec![
+            "TRX-842-YH",      // Too short
+            "TRX-842-YHGG",    // Too long
+            "trx-842-yhg",     // Lowercase
+            "TRX-84-YHG",      // Wrong middle part
+            "TX-842-YHG",      // Wrong first part
+            "TRX842YHG",       // No dashes
+            "TRX-ABC-YHG",     // Letters in middle
+        ];
+
+        for code in test_cases {
+            let mission = Mission {
+                date: "2045-07-12".to_string(),
+                mission_id: "KLM-1234".to_string(),
+                destination: "Mars".to_string(),
+                status: "Completed".to_string(),
+                crew_size: 5,
+                duration: 387,
+                success_rate: 98.7,
+                security_code: code.to_string(),
+                line_number: 1,
+            };
+
+            assert!(!mission.is_valid_security_code(), "Expected {} to be invalid", code);
+        }
+    }
+
+    #[test]
+    fn test_is_completed_mars_mission_valid() {
+        let mission = Mission {
+            date: "2045-07-12".to_string(),
+            mission_id: "KLM-1234".to_string(),
+            destination: "Mars".to_string(),
+            status: "Completed".to_string(),
+            crew_size: 5,
+            duration: 387,
+            success_rate: 98.7,
+            security_code: "TRX-842-YHG".to_string(),
+            line_number: 1,
+        };
+
+        assert!(mission.is_completed_mars_mission());
+    }
+
+    #[test]
+    fn test_is_completed_mars_mission_case_insensitive() {
+        let mission = Mission {
+            date: "2045-07-12".to_string(),
+            mission_id: "KLM-1234".to_string(),
+            destination: "MARS".to_string(),
+            status: "COMPLETED".to_string(),
+            crew_size: 5,
+            duration: 387,
+            success_rate: 98.7,
+            security_code: "TRX-842-YHG".to_string(),
+            line_number: 1,
+        };
+
+        assert!(mission.is_completed_mars_mission());
+    }
+
+    #[test]
+    fn test_is_completed_mars_mission_wrong_destination() {
+        let mission = Mission {
+            date: "2045-07-12".to_string(),
+            mission_id: "KLM-1234".to_string(),
+            destination: "Jupiter".to_string(),
+            status: "Completed".to_string(),
+            crew_size: 5,
+            duration: 387,
+            success_rate: 98.7,
+            security_code: "TRX-842-YHG".to_string(),
+            line_number: 1,
+        };
+
+        assert!(!mission.is_completed_mars_mission());
+    }
+
+    #[test]
+    fn test_is_completed_mars_mission_wrong_status() {
+        let mission = Mission {
+            date: "2045-07-12".to_string(),
+            mission_id: "KLM-1234".to_string(),
+            destination: "Mars".to_string(),
+            status: "Failed".to_string(),
+            crew_size: 5,
+            duration: 387,
+            success_rate: 98.7,
+            security_code: "TRX-842-YHG".to_string(),
+            line_number: 1,
+        };
+
+        assert!(!mission.is_completed_mars_mission());
+    }
+
+    #[test]
+    fn test_is_completed_mars_mission_zero_duration() {
+        let mission = Mission {
+            date: "2045-07-12".to_string(),
+            mission_id: "KLM-1234".to_string(),
+            destination: "Mars".to_string(),
+            status: "Completed".to_string(),
+            crew_size: 5,
+            duration: 0,
+            success_rate: 98.7,
+            security_code: "TRX-842-YHG".to_string(),
+            line_number: 1,
+        };
+
+        assert!(!mission.is_completed_mars_mission());
+    }
+
+    #[test]
+    fn test_is_completed_mars_mission_invalid_code() {
+        let mission = Mission {
+            date: "2045-07-12".to_string(),
+            mission_id: "KLM-1234".to_string(),
+            destination: "Mars".to_string(),
+            status: "Completed".to_string(),
+            crew_size: 5,
+            duration: 387,
+            success_rate: 98.7,
+            security_code: "INVALID".to_string(),
+            line_number: 1,
+        };
+
+        assert!(!mission.is_completed_mars_mission());
+    }
+
+    #[test]
+    fn test_is_comment_or_metadata() {
+        assert!(is_comment_or_metadata("# This is a comment"));
+        assert!(is_comment_or_metadata("  # Comment with leading space"));
+        assert!(is_comment_or_metadata("SYSTEM: Something"));
+        assert!(is_comment_or_metadata("CONFIG: value"));
+        assert!(is_comment_or_metadata("CHECKSUM: 12345"));
+        assert!(is_comment_or_metadata(""));
+        assert!(is_comment_or_metadata("   "));
+
+        assert!(!is_comment_or_metadata("2045-07-12 | KLM-1234 | Mars | Completed | 5 | 387 | 98.7 | TRX-842-YHG"));
+    }
+
+    #[test]
+    fn test_mission_sorting() {
+        let mut missions = vec![
+            Mission {
+                date: "2045-07-12".to_string(),
+                mission_id: "M1".to_string(),
+                destination: "Mars".to_string(),
+                status: "Completed".to_string(),
+                crew_size: 5,
+                duration: 100,
+                success_rate: 98.7,
+                security_code: "TRX-842-YHG".to_string(),
+                line_number: 1,
+            },
+            Mission {
+                date: "2046-07-12".to_string(),
+                mission_id: "M2".to_string(),
+                destination: "Mars".to_string(),
+                status: "Completed".to_string(),
+                crew_size: 5,
+                duration: 500,
+                success_rate: 98.7,
+                security_code: "ABC-123-XYZ".to_string(),
+                line_number: 2,
+            },
+            Mission {
+                date: "2047-07-12".to_string(),
+                mission_id: "M3".to_string(),
+                destination: "Mars".to_string(),
+                status: "Completed".to_string(),
+                crew_size: 5,
+                duration: 300,
+                success_rate: 98.7,
+                security_code: "DEF-456-GHI".to_string(),
+                line_number: 3,
+            },
+        ];
+
+        missions.sort_by(|a, b| b.duration.cmp(&a.duration));
+
+        assert_eq!(missions[0].duration, 500);
+        assert_eq!(missions[1].duration, 300);
+        assert_eq!(missions[2].duration, 100);
     }
 }

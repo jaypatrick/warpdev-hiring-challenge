@@ -133,7 +133,9 @@ time ./target/release/mars-mission-analyzer data/space_missions.log
 
 ### Running Tests
 
-**Platform-Agnostic (Recommended):**
+**AWK Tests:**
+
+*Platform-Agnostic (Recommended):*
 ```bash
 # Works on all platforms - automatically detects OS
 ./test
@@ -142,23 +144,50 @@ time ./target/release/mars-mission-analyzer data/space_missions.log
 test.cmd
 ```
 
-**Platform-Specific:**
+*Platform-Specific:*
 
-*Unix/Linux/macOS/WSL/Git Bash:*
+Unix/Linux/macOS/WSL/Git Bash:
 ```bash
 ./tests/run_tests.sh
 ```
 
-*Windows CMD/PowerShell:*
+Windows CMD/PowerShell:
 ```cmd
 tests\run_tests.bat
 ```
 
-**Quick Manual Test:**
+*Quick Manual Test:*
 ```bash
 # Test with small dataset (works on all platforms)
 awk -f src/mars_mission_analyzer.awk tests/test_data.log
 ```
+
+**Rust Tests:**
+
+```bash
+# Run all tests (unit + integration)
+cargo test
+
+# Run tests in release mode
+cargo test --release
+
+# Run with verbose output
+cargo test -- --nocapture
+
+# Run specific test
+cargo test test_mission_from_line_valid
+
+# Run only unit tests
+cargo test --lib
+
+# Run only integration tests
+cargo test --test integration_test
+```
+
+**Test Coverage:**
+- **14 Unit Tests**: Test Mission struct parsing, validation, security code format, filtering logic, sorting
+- **14 Integration Tests**: Test CLI arguments, file processing, output formats (JSON, CSV, default), error handling, edge cases
+- All tests pass with 100% success rate
 
 ### Documentation
 
@@ -178,8 +207,9 @@ awk -f src/mars_mission_analyzer.awk tests/test_data.log
 │   └── space_missions.log     # Full mission log (~10MB)
 ├── tests/
 │   ├── test_data.log          # Test dataset
-│   ├── run_tests.sh           # Unix test runner
-│   └── run_tests.bat          # Windows test runner
+│   ├── integration_test.rs    # Rust integration tests
+│   ├── run_tests.sh           # Unix test runner (AWK)
+│   └── run_tests.bat          # Windows test runner (AWK)
 ├── .github/
 │   └── workflows/
 │       └── test.yml           # CI/CD configuration
