@@ -9,18 +9,41 @@ Get started by reading the [challenge description](mission_challenge.md). Good l
 
 ## Solution
 
-The challenge has been solved using AWK! Run the solution with:
-
-```bash
-awk -f src/mars_mission_analyzer.awk data/space_missions.log
-```
+The challenge has been solved using both **AWK** and **Rust**!
 
 **Answer:**
 - Security Code: `XRT-421-ZQP`
 - Mission Length: `1629 days`
 
+### AWK Solution
+
+Run the AWK solution with:
+
+```bash
+awk -f src/mars_mission_analyzer.awk data/space_missions.log
+```
+
+### Rust Solution
+
+Run the Rust solution with:
+
+```bash
+# Build and run (first time)
+cargo build --release
+./target/release/mars-mission-analyzer data/space_missions.log
+
+# Or use the convenience wrapper
+./analyze-rust data/space_missions.log          # Unix/Linux/macOS
+analyze-rust.bat data/space_missions.log        # Windows
+```
+
+**Performance Comparison:**
+- Rust: ~0.12 seconds (2x faster)
+- AWK: ~0.22 seconds
+
 ### Quick Start
 
+**AWK Version:**
 ```bash
 # Basic usage
 awk -f src/mars_mission_analyzer.awk data/space_missions.log
@@ -46,6 +69,30 @@ awk -v format=csv -v top=10 -f src/mars_mission_analyzer.awk data/space_missions
 
 # Benchmark performance
 time awk -f src/mars_mission_analyzer.awk data/space_missions.log
+```
+
+**Rust Version:**
+```bash
+# Basic usage
+./target/release/mars-mission-analyzer data/space_missions.log
+
+# Show help
+./target/release/mars-mission-analyzer --help
+
+# Verbose output with statistics
+./target/release/mars-mission-analyzer --verbose data/space_missions.log
+
+# Get top 5 longest missions
+./target/release/mars-mission-analyzer --top 5 data/space_missions.log
+
+# Export as JSON
+./target/release/mars-mission-analyzer --format json data/space_missions.log
+
+# Export as CSV with top 10
+./target/release/mars-mission-analyzer --format csv --top 10 data/space_missions.log
+
+# Benchmark performance
+time ./target/release/mars-mission-analyzer data/space_missions.log
 ```
 
 ### Features
@@ -74,10 +121,15 @@ time awk -f src/mars_mission_analyzer.awk data/space_missions.log
 - Cross-platform testing (macOS and Linux)
 
 #### Performance
-- Optimized AWK script processes ~100K lines in < 1 second
-- Early-exit optimization for non-Mars missions
-- Efficient single-pass processing
-- Built-in timing via `./analyze` wrapper
+- **Rust**: Processes ~100K lines in ~0.12 seconds
+  - Compiled binary with aggressive optimizations
+  - Type-safe, memory-efficient processing
+  - Built with LTO and single codegen unit
+- **AWK**: Processes ~100K lines in ~0.22 seconds
+  - Optimized single-pass processing
+  - Early-exit optimization for non-Mars missions
+  - Efficient text processing
+- Built-in timing via `./analyze` and `./analyze-rust` wrappers
 
 ### Running Tests
 
@@ -120,6 +172,7 @@ awk -f src/mars_mission_analyzer.awk tests/test_data.log
 ```
 .
 ├── src/
+│   ├── main.rs                    # Rust implementation
 │   └── mars_mission_analyzer.awk  # AWK script to find longest Mars missions
 ├── data/
 │   └── space_missions.log     # Full mission log (~10MB)
@@ -130,10 +183,13 @@ awk -f src/mars_mission_analyzer.awk tests/test_data.log
 ├── .github/
 │   └── workflows/
 │       └── test.yml           # CI/CD configuration
+├── Cargo.toml                 # Rust project configuration
 ├── test                       # Platform-agnostic test wrapper (Unix)
 ├── test.cmd                   # Platform-agnostic test wrapper (Windows)
-├── analyze                    # Analysis with timing (Unix)
-├── analyze.bat                # Analysis with timing (Windows)
+├── analyze                    # AWK analysis with timing (Unix)
+├── analyze.bat                # AWK analysis with timing (Windows)
+├── analyze-rust               # Rust analysis with timing (Unix)
+├── analyze-rust.bat           # Rust analysis with timing (Windows)
 ├── README.md                  # This file
 ├── WARP.md                    # Developer documentation
 ├── WINDOWS.md                 # Windows-specific guide
