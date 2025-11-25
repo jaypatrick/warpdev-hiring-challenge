@@ -1,0 +1,16 @@
+#!/bin/bash
+# Wrapper script to run the Rust Mars mission analyzer with timing
+
+set -e
+
+# Build if not already built
+if [ ! -f "target/release/mars-mission-analyzer" ]; then
+    echo "Building Rust analyzer (first time only)..."
+    cargo build --release
+    echo ""
+fi
+
+# Run with timing
+echo "Running Rust Mars Mission Analyzer..."
+echo "======================================"
+time ./target/release/mars-mission-analyzer "$@"
