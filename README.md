@@ -12,8 +12,8 @@ Get started by reading the [challenge description](mission_challenge.md). Good l
 The challenge has been solved using both **AWK** and **Rust**!
 
 **Answer:**
-- Security Code: `XRT-421-ZQP`
-- Mission Length: `1629 days`
+- Security Code: `--- --- ---`
+- Mission Length: `--days`
 
 ### AWK Solution
 
